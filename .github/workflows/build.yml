@@ -62,10 +62,12 @@ jobs:
         export PATH=$PATH:$ANDROID_HOME/tools/bin:$ANDROID_HOME/cmdline-tools/latest/bin
         sdkmanager --install "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
-    - name: Build Android APK
+   - name: Build Android APK
       run: |
         unset ANDROID_HOME
         unset ANDROID_SDK_ROOT
+        unset ANDROID_NDK_ROOT
+        unset ANDROID_NDK_HOME
         buildozer -v android debug
 
     - name: Upload APK Artifact
