@@ -22,8 +22,7 @@ jobs:
         sudo apt-get install -y openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev git
         pip install --upgrade pip
         pip install buildozer cython==0.29.34
-
- - name: Set up Android SDK command-line tools
+- name: Set up Android SDK command-line tools
       run: |
         export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools/latest
@@ -31,9 +30,9 @@ jobs:
         unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
         cp -r /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
         
-        # Buildozer'ın aradığı tam 'tools/bin' yolunu oluşturalım
+        # Sembolik bağlantı yerine doğrudan tools/bin dizinini kopyalayarak oluşturalım
         mkdir -p $ANDROID_HOME/tools
-        ln -sfn $ANDROID_HOME/cmdline-tools/latest/bin $ANDROID_HOME/tools/bin
+        cp -r $ANDROID_HOME/cmdline-tools/latest/bin $ANDROID_HOME/tools/bin
         
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
