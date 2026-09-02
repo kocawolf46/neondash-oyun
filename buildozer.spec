@@ -4,6 +4,7 @@ version = 0.1
 android.sdk = 33
 android.min_api = 21
 android.ndk = 25b
+android.accept_sdk_license = True
 title = NeonDash
 package.name = neondash
 package.domain = org.oyun
