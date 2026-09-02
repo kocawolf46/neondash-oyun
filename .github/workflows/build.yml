@@ -37,7 +37,7 @@ jobs:
           zip \
           unzip
 
-   - name: Install Buildozer and Cython
+    - name: Install Buildozer and Cython
       run: |
         pip install --upgrade pip
         pip install --upgrade buildozer==1.5.0 cython==0.29.33
