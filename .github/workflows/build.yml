@@ -42,7 +42,7 @@ jobs:
         pip install --upgrade pip
         pip install --upgrade buildozer cython==0.29.34
 
-    - name: Set up Android SDK and Tools Manually
+    - - name: Set up Android SDK and Tools Manually
       run: |
         export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools/latest
@@ -51,9 +51,9 @@ jobs:
         unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
         cp -r /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
         
-        mkdir -p $ANDROID_HOME/tools/bin
-        cp -r $ANDROID_HOME/cmdline-tools/latest/bin/* $ANDROID_HOME/tools/bin/
-        ln -sfn $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
+        # Buildozer'ın aradığı tools dizinini, içindeki lib klasörüyle birlikte tam olarak bağlıyoruz
+        rm -rf $ANDROID_HOME/tools
+        ln -sfn $ANDROID_HOME/cmdline-tools/latest $ANDROID_HOME/tools
         
         mkdir -p $ANDROID_HOME/licenses
         echo "24333f1a436e6f252d7766afed81046503d0b741" > $ANDROID_HOME/licenses/android-sdk-license
@@ -62,7 +62,6 @@ jobs:
         
         export PATH=$PATH:$ANDROID_HOME/tools/bin:$ANDROID_HOME/cmdline-tools/latest/bin
         sdkmanager --install "platform-tools" "platforms;android-33" "build-tools;33.0.2"
-
  - name: Build Android APK
       run: |
         unset ANDROID_HOME
