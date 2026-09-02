@@ -1,6 +1,9 @@
 [app]
 source.dir = .
 version = 0.1
+android.sdk = 33
+android.min_api = 21
+android.ndk = 25b
 title = NeonDash
 package.name = neondash
 package.domain = org.oyun
