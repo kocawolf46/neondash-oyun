@@ -1,3 +1,4 @@
+[app]
 title = NeonDash
 package.name = neondash
 package.domain = org.oyun
