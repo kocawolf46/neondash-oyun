@@ -11,47 +11,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Build with Buildozer Action
+      uses: ArtemSBulgakov/buildozer-action@v1
+      id: buildozer
       with:
-        python-version: '3.10'
-
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev git
-        pip install --upgrade pip
-        pip install buildozer cython==0.29.34
-
-    - name: Set up Full Android SDK & NDK Environment
-      run: |
-        export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
-        mkdir -p $ANDROID_HOME/cmdline-tools/latest
-        
-        # Java 17 uyumlu kararlı command-line tools sürümü (9477386)
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O /tmp/cmdtools.zip
-        unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
-        cp -r /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
-        
-        # Buildozer'ın aradığı tüm yolları garantiye alalım
-        mkdir -p $ANDROID_HOME/tools/bin
-        cp -r $ANDROID_HOME/cmdline-tools/latest/bin/* $ANDROID_HOME/tools/bin/
-        
-        # Lisansları onayla ve SDK bileşenlerini kur
-        export PATH=$PATH:$ANDROID_HOME/tools/bin:$ANDROID_HOME/cmdline-tools/latest/bin
-        yes | sdkmanager --licenses || true
-        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
-        
-        # NDK kurulumu
-        NDK_DIR=/home/runner/.buildozer/android/platform/android-ndk-r25b
-        mkdir -p /home/runner/.buildozer/android/platform
-        if [ ! -d "$NDK_DIR" ]; then
-          wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip -O /tmp/ndk.zip
-          unzip -q /tmp/ndk.zip -d /home/runner/.buildozer/android/platform/
-        fi
-
-    - name: Build with Buildozer
-      run: buildozer -v android debug
+        command: buildozer -v android debug
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
