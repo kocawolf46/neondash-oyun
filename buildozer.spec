@@ -1,4 +1,6 @@
 [app]
+source.dir = .
+version = 0.1
 title = NeonDash
 package.name = neondash
 package.domain = org.oyun
