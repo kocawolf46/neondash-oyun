@@ -1,17 +1,38 @@
 name: Build NeonDash APK
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: Build APK
-        uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          workdir:.
-          command: buildozer android debug
-          buildozer_version: stable
-      - uses: actions/upload-artifact@v4
+
+      - name: Kurulumlari yap
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip openjdk-17-jdk zip unzip libffi-dev libssl-dev
+          pip3 install --upgrade pip
+          pip3 install buildozer cython==0.29.36
+
+      - name: Lisanslari kabul et ve APK olustur
+        run: |
+          # GitHub'in kendi SDK'si ile cakismamasi icin
+          unset ANDROID_HOME
+          unset ANDROID_SDK_ROOT
+          export PATH=$PATH:~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
+
+          # Buildozer ilk calismada SDK'yi indirecek
+          buildozer android debug || true
+
+          # Lisanslari zorla kabul ettir - hatanin cozumu bu
+          yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.2" "platforms;android-33"
+
+          # Simdi gercek build
+          buildozer android debug
+
+      - name: APK yi kaydet
+        uses: actions/upload-artifact@v4
         with:
           name: NeonDash-APK
           path: bin/*.apk
