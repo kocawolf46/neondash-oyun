@@ -4,18 +4,17 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-22.04
-    # Kivy'nin kendi hazir Buildozer imajini kullaniyoruz, icinde lisanslar kabul edilmis ve aidl hazir
     container:
-      image: kivy/buildozer:latest
+      image: kivy/buildozer:stable
 
     steps:
       - name: Kodu cek
         uses: actions/checkout@v4
 
       - name: APK olustur
+        env:
+          BUILDOZER_WARN_ON_ROOT: 0
         run: |
-          # Container icinde root oldugumuz icin izin sorunu cikmasin
-          git config --global --add safe.directory /__w/neondash/neondash
           buildozer android debug
 
       - name: APK yi kaydet
