@@ -30,7 +30,7 @@ jobs:
           SDKMANAGER=$(find ~/.buildozer -name sdkmanager | head -n 1)
           echo "SDKMANAGER bulundu: $SDKMANAGER"
           yes | $SDKMANAGER --licenses || true
-          $SDKMANAGER --install "platforms;android-33" "build-tools;33.0.2" "platform-tools"
+          $SDKMANAGER "platforms;android-33" "build-tools;33.0.2" "platform-tools"
 
           BUILDTOOLS_DIR=$(dirname $(dirname $SDKMANAGER))/../build-tools
           echo "Build-tools dizini: $BUILDTOOLS_DIR"
