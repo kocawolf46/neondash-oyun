@@ -7,11 +7,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Setup Java 11
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '11'
 
       - name: Bagimliliklari Kur
         run: |
@@ -23,23 +23,19 @@ jobs:
         env:
           BUILDOZER_WARN_ON_ROOT: 0
         run: |
-          buildozer android debug || true
+          yes | buildozer android debug  true
 
       - name: Lisanslari Kabul Et ve 37 hatasini fakele
         run: |
+          SDK_ROOT=~/.buildozer/android/platform/android-sdk
           SDKMANAGER=$(find ~/.buildozer -name sdkmanager | head -n 1)
           echo "SDKMANAGER bulundu: $SDKMANAGER"
-          yes | $SDKMANAGER --licenses || true
-          $SDKMANAGER "platforms;android-33" "build-tools;33.0.2" "platform-tools"
+          
+          yes | $SDKMANAGER --sdk_root=$SDK_ROOT --licenses  true
+          $SDKMANAGER --sdk_root=$SDK_ROOT "platforms;android-33" "build-tools;33.0.2" "platform-tools"
 
-          BUILDTOOLS_DIR=$(dirname $(dirname $SDKMANAGER))/../build-tools
-          echo "Build-tools dizini: $BUILDTOOLS_DIR"
-          ls -la ~/.buildozer/android/platform/android-sdk/build-tools/
-
-          # Iste kilit nokta: 37.0.0 klasoru yok diye aidl bulunamiyor diyor
-          # 33.0.2'yi 37.0.0 olarak kopyaliyoruz
-          if [ -d ~/.buildozer/android/platform/android-sdk/build-tools/33.0.2 ]; then
-            cp -r ~/.buildozer/android/platform/android-sdk/build-tools/33.0.2 ~/.buildozer/android/platform/android-sdk/build-tools/37.0.0
+          if [ -d $SDK_ROOT/build-tools/33.0.2 ]; then
+            cp -r $SDK_ROOT/build-tools/33.0.2 $SDK_ROOT/build-tools/37.0.0
             echo "37.0.0 fake klasoru olusturuldu"
           fi
 
@@ -49,7 +45,7 @@ jobs:
         run: |
           unset ANDROID_HOME
           unset ANDROID_SDK_ROOT
-          buildozer android debug
+          yes | buildozer android debug
 
       - name: APK yi Kaydet
         uses: actions/upload-artifact@v4
