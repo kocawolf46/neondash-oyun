@@ -54,3 +54,14 @@ p4a.bootstrap = sdl2
 warn_on_root = 1
 
 log_level = 2
+android.api = 33
+android.minapi = 21
+android.ndk = 25b
+android.sdk = 33
+android.accept_sdk_license_agreement = True
+
+# BU SATIR COZUMUN KILIDI
+android.build_tools_version = 33.0.2
+
+p4a.bootstrap = sdl2
+p4a.local_recipes =
