@@ -10,7 +10,11 @@ package.name = neondash
 package.domain = org.oyun
 
 # (list) Source files to include (let it include all)
-source.dir = .
+source.dir = 
+
+#source.exclude_dirs = tests, bin, venv, .git, .github, .buildozer.
+
+#source.include_patterns = assets/*,images/*,fonts/*,sounds/*
 
 # (list) Source files to exclude (let it be empty)
 source.exclude_exts = spec
@@ -23,7 +27,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,wav,ogg
 requirements = python3,pygame
 
 # (str) Version of the application
-version = 0.1
+version = 1.0.0
 
 # (list) Supported orientations
 orientation = landscape
