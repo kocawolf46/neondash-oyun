@@ -21,5 +21,5 @@ android.accept_sdk_license_agreement = True
 p4a.bootstrap = sdl2
 
 [buildozer]
-warn_on_root = 1
+warn_on_root = 0
 log_level = 2
