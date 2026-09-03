@@ -4,31 +4,18 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-22.04
+    # Kivy'nin kendi hazir Buildozer imajini kullaniyoruz, icinde lisanslar kabul edilmis ve aidl hazir
+    container:
+      image: kivy/buildozer:latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Kodu cek
+        uses: actions/checkout@v4
 
-      - name: Kurulumlari yap
+      - name: APK olustur
         run: |
-          sudo apt update
-          sudo apt install -y python3-pip openjdk-17-jdk zip unzip libffi-dev libssl-dev
-          pip3 install --upgrade pip
-          pip3 install buildozer cython==0.29.36
-
-      - name: Lisanslari kabul et ve APK olustur
-        run: |
-          # GitHub'in kendi SDK'si ile cakismamasi icin
-          unset ANDROID_HOME
-          unset ANDROID_SDK_ROOT
-          export PATH=$PATH:~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
-
-          # Buildozer ilk calismada SDK'yi indirecek
-          buildozer android debug || true
-
-          # Lisanslari zorla kabul ettir - hatanin cozumu bu
-          yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.2" "platforms;android-33"
-
-          # Simdi gercek build
+          # Container icinde root oldugumuz icin izin sorunu cikmasin
+          git config --global --add safe.directory /__w/neondash/neondash
           buildozer android debug
 
       - name: APK yi kaydet
