@@ -16,27 +16,21 @@ jobs:
       - name: Bagimliliklari Kur
         run: |
           sudo apt update
-          sudo apt install -y python3-pip zip unzip libffi-dev libssl-dev libbz2-dev
+          sudo apt install -y python3-pip zip unzip libffi-dev libssl-dev libbz2-dev libltdl-dev
+          pip3 install --upgrade pip
           pip3 install buildozer==1.5.0 cython==0.29.36
 
-- name: Build APK
-  run: |
-    echo y | buildozer android debug
-  env:
-    BUILDOZER_WARN_ON_ROOT: 0
-
-      - name: Lisanslari Kabul Et ve 37 hatasini fakele
+      - name: Ilk Kurulum ve Lisanslar
         run: |
+          yes | buildozer android debug || true
           SDK_ROOT=~/.buildozer/android/platform/android-sdk
           SDKMANAGER=$(find ~/.buildozer -name sdkmanager | head -n 1)
-          echo "SDKMANAGER bulundu: $SDKMANAGER"
-          
-          yes | $SDKMANAGER --sdk_root=$SDK_ROOT --licenses  true
+          echo "SDKMANAGER: $SDKMANAGER"
+          yes | $SDKMANAGER --sdk_root=$SDK_ROOT --licenses
           $SDKMANAGER --sdk_root=$SDK_ROOT "platforms;android-33" "build-tools;33.0.2" "platform-tools"
-
           if [ -d $SDK_ROOT/build-tools/33.0.2 ]; then
             cp -r $SDK_ROOT/build-tools/33.0.2 $SDK_ROOT/build-tools/37.0.0
-            echo "37.0.0 fake klasoru olusturuldu"
+            echo "37.0.0 fake klasor olusturuldu"
           fi
 
       - name: Gercek Build
