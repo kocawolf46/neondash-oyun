@@ -21,7 +21,9 @@ jobs:
 
 - name: Build APK
   run: |
-    yes | buildozer android debug
+    echo y | buildozer android debug
+  env:
+    BUILDOZER_WARN_ON_ROOT: 0
 
       - name: Lisanslari Kabul Et ve 37 hatasini fakele
         run: |
