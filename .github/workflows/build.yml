@@ -1,20 +1,24 @@
 name: Build NeonDash APK
 on: [push]
+
 jobs:
   build:
-    # Build konteyner içinde yapıldığı için runner sürümü önemli değil
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Build APK (official Buildozer image)
-        run: |
-          docker run --rm \
-            --volume "$PWD":/home/user/hostcwd \
-            ghcr.io/kivy/buildozer:latest \
-            android debug
+      - name: Build APK
+        id: buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          command: buildozer android debug
+          workdir: .
+          buildozer_version: stable
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: NeonDash-APK
           path: bin/*.apk
+          if-no-files-found: error
