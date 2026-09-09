@@ -2,15 +2,18 @@ name: Build NeonDash APK
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    # Build konteyner içinde yapıldığı için runner sürümü önemli değil
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build APK
-        uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          workdir: .
-          command: buildozer android debug
-          buildozer_version: stable
+
+      - name: Build APK (official Buildozer image)
+        run: |
+          docker run --rm \
+            --volume "$PWD":/home/user/hostcwd \
+            ghcr.io/kivy/buildozer:latest \
+            android debug
+
       - uses: actions/upload-artifact@v4
         with:
           name: NeonDash-APK
