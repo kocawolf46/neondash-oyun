@@ -14,10 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -27,12 +27,14 @@ jobs:
 
       - name: Install system dependencies
         run: |
+          sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             git zip unzip patch ccache cmake \
             autoconf automake libtool libltdl-dev \
             pkg-config zlib1g-dev libssl-dev libffi-dev \
-            libncurses-dev gettext build-essential
+            libncurses-dev gettext build-essential \
+            openjdk-17-jdk libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
 
       - name: Cache buildozer global dir (SDK / NDK)
         uses: actions/cache@v4
